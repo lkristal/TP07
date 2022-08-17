@@ -1,0 +1,113 @@
+<div class="row">
+    <div class="col-md-2 col-12">
+        <div class="row">
+            <div class="col-md-12 p-2"><a href='@Url.Action("Comodin50","Home")' class='btn @(ViewBag.Player.Comodin50 ? "btn-success" : "btn-danger") btn-lg btn-block'>50/50</a></div>
+            <div class="col-md-12 p-2"><a href='@Url.Action("ComodinSaltear","Home")' class='btn @(ViewBag.Player.ComodinSaltear ? "btn-success" : "btn-danger") btn-lg btn-block'>Saltear Pregunta</a></div>
+            <div class="col-md-12 p-2">
+                <button type="button" class='btn @(ViewBag.Player.ComodinDobleChance ? "btn-success" : "btn-danger") btn-lg btn-block' data-toggle="modal" data-target="#ComodinDobleChance">
+                    Doble Chance
+                </button>        
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9 col-12">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="jumbotron">
+                    <h1 class="display-4">@ViewBag.Pregunta.TextoPregunta</h1>
+                    </div>
+                </div>
+                @foreach (Respuesta item in ViewBag.Respuestas)
+                {
+                    <div class="col-md-6 p-2">
+                        @{
+                            if (ViewBag.DescartarRespuestas == null || !ViewBag.DescartarRespuestas.Contains(item.OpcionRespuesta))
+                            {
+                                <a href='@Url.Action("PreguntaRespondida","Home", new {Opcion1=item.OpcionRespuesta})' class="btn btn-success btn-lg btn-block">@item.OpcionRespuesta - @item.TextoRespuesta</a>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 m-1 btn btn-sm btn-dark text-center">POZO</div>
+                @foreach (Pozo item in ViewBag.ListaPozo)
+                {
+                    <div class='col-md-12 m-1 btn btn-md @(item.ValorSeguro ? "btn-info" : "btn-warning") text-center'>
+                        @if (ViewBag.ImportePozo == item.Importe)
+                        {
+                            <img src="/img/arrow-right-square-fill.svg">
+                        }
+                        @item.Importe
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="ComodinDobleChance" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Comodín Doble Chance</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <form action='@Url.Action("ResponderDobleChance","Home")' method="POST">
+                <div class="btn-group-toggle" data-toggle="buttons">
+                        @foreach (Respuesta item in ViewBag.Respuestas)
+                        {
+                            <label class="btn btn-primary w-100 mt-1" onclick="ChangeColorSelected()" id="Label@(item.OpcionRespuesta)">
+                                <input type="checkbox" autocomplete="off" name="@item.OpcionRespuesta" id="Check@(item.OpcionRespuesta)"> 
+                                    @item.OpcionRespuesta - @item.TextoRespuesta
+                            </label>
+                        }
+                </div>
+            </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success">Arriesgar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function ChangeColorSelected()
+    {
+        if ($("#CheckA").prop('checked'))
+        {
+            $("#LabelA").removeClass('btn-primary');
+            $("#LabelA").addClass('btn-success');
+        }
+        else
+        {
+            $("#LabelA").removeClass('btn-success');
+            $("#LabelA").addClass('btn-primary');
+        }
+        if ($("#CheckB").prop('checked'))
+        {
+            $("#LabelB").removeClass('btn-primary');
+            $("#LabelB").addClass('btn-success');
+        }
+        else
+        {
+            $("#LabelB").removeClass('btn-success');
+            $("#LabelB").addClass('btn-primary');
+        }
+
+
+    }
+</script>
